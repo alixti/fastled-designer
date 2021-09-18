@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">-->
+  <title>App</title>
+  <link rel="stylesheet" href="../node_modules/bootswatch/dist/slate/bootstrap.min.css" />
+  <link rel="stylesheet" href="../node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" />
+  <link rel="stylesheet" href="./style.css" />
+  <style id="cssJS"></style>
+</head>
+
+<body>
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div class="col-5 h-100 w-100 previewside p-0 bordear">
+      </div>
+      <div class="col-3 p-0 text-center bordear ovauto disableMe">
+        <div class="posaffix">
+          <h3>LEDS</h3>
+          <h5>Selected: <b><span id="ledID">000</span></b>.</h5>
+        </div>
+        <input id="inputColor" class="form-control text-white text-center" disabled>
+
+        <div id="colorSelectBox" class="mt-2" data-color="#000000"></div>
+        <div><button class="btn btn-primary btn-block my-1" style="background-color: #000000" id="allblackbtn">Make All Black</button><button class="btn btn-primary btn-block mb-1" id="getColorOfActualLed">Use LED Color</button></div>
+      </div>
+      <div class="col-2 p-0 bordear ovauto">
+        <div class="text-center">
+          <div class="posaffix">
+            <div class="disableMe">
+              <h3>Frames</h3>
+              <h5>Selected: <b><span id="frameID">000</span></b>.</h5>
+            </div>
+            <button onclick="playCurrentAnim($(this));" class="btn btn-primary btn-sm">Play</button>
+            <button onclick="addNewFrame();" class="disableMe btn btn-success btn-sm">Add</button>
+          </div>
+          <ul class="list-group disableMe" id="listFrames">
+          </ul>
+        </div>
+      </div>
+      <div class="col-2 bordear p-0 ovauto disableMe">
+        <div class="text-center">
+          <div class="posaffix">
+            <h3>Animations</h3>
+            <h5>Selected: <b><span id="animID">000</span></b>.</h5>
+            <button onclick="addNewAnim();" class="btn btn-success btn-sm disableMe">Add</button>
+          </div>
+          <ul class="list-group" id="listAnims">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalConfig" tabindex="-1" role="dialog" aria-labelledby="modalConfigTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalConfigTitle">Project Configuration</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="configField">
+            <div class="form-group">
+              <label for="config_9">Project's Name</label>
+              <input type="text" class="form-control" id="config_9">
+            </div>
+            <div class="form-group">
+              <label for="config_4">Leds Quantity</label>
+              <input type="number" class="form-control" id="config_4" min="0" value="0" disabled>
+            </div>
+            <h4 class="text-center">Delays</h4>
+            <div class="form-group">
+              <label for="config_0">Delay between frames (ms)</label>
+              <input type="number" class="form-control" id="config_0" min="0" value="0">
+              <small class="text-muted">It will also applied to playing.</small>
+            </div>
+            <div class="form-group">
+              <label for="config_7">Delay between animations (ms)</label>
+              <input type="number" class="form-control" id="config_7" min="0" value="0">
+            </div>
+            <h4 class="text-center">Preview</h4>
+            <div class="form-group">
+              <label for="config_1">Leds Width</label>
+              <input type="number" class="form-control" id="config_1" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="config_2">Leds Height</label>
+              <input type="number" class="form-control" id="config_2" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="config_3">Leds Font Size</label>
+              <input type="number" class="form-control" id="config_3" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="PreviewBgUpload">Background Photo</label>
+              <div class="custom-file text-left">
+                <input type="file" class="custom-file-input" id="PreviewBgUpload" accept="image/*">
+                <label class="custom-file-label" for="PreviewBgUpload">Upload Picture</label>
+              </div>
+            </div>
+            <h4 class="text-center">Arduino Sketch</h4>
+            <div class="form-group">
+              <label for="config_5">DATA Pin</label>
+              <input type="number" class="form-control" id="config_5" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="config_6">CLK Pin</label>
+              <input type="number" class="form-control" id="config_6" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="config_8">Led Strip Chip</label>
+              <select class="custom-select mr-sm-2" id="config_8">
+                <option value="NEOPIXEL">NEOPIXEL</option>
+                <option value="WS2812B">WS2812B</option>
+                <option value="WS2811">WS2811</option>
+              </select>
+            </div>
+          </div>
+          <div class="btndelc">
+            <h4 class="text-center">Delete App Data.</h4>
+            <div class="alert alert-danger" id="alertbrowser"><small>The configuration and work is automatically saved by the app (only if it is enabled). You can delete the application data with these buttons:</small></div>
+            <button class="btn btn-danger btn-block" id="delConfigAnims">Delete configuration and animations</button>
+            <button class="btn btn-danger btn-block" id="delConfig">Delete only configuration</button>
+            <button class="btn btn-danger btn-block" id="delAnims">Delete only animations</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="custom-file text-left" style="display:none;">
+    <input type="file" class="custom-file-input" id="workUpload" accept="application/json">
+    <label class="custom-file-label" for="workUpload">Upload File</label>
+  </div>
+
+  <script>
+    window.jQuery = window.$ = require('jquery');
+  </script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"></script>
+  <script src="./script_web.js"></script>
+</body>
+
+</html>
