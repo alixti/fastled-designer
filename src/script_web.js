@@ -168,13 +168,13 @@ function playCurrentAnim(el) {
         lastIDForPlay = parseInt($('#frameID').html());
         $('.disableMe').addClass('IDisableYou');
         isPlaying = true;
-        el.attr('class', 'btn btn-danger btn-sm').html('Detener');
+        el.attr('class', 'btn btn-danger btn-sm').html('Stop');
         handlePlay();
     } else {
         clearTimeout(timeoutPlay);
         $('.disableMe').removeClass('IDisableYou');
         isPlaying = false;
-        el.attr('class', 'btn btn-primary btn-sm').html('Reproducir');
+        el.attr('class', 'btn btn-primary btn-sm').html('Play');
         $('#frameID').html(lastIDForPlay);
 
         $.each(animaciones[animID].frames[lastIDForPlay].leds, function (index, value) {
