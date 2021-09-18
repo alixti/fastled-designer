@@ -13,6 +13,7 @@ Create beautiful animations on your LED Strips with an easy to modify and deploy
  - Export to Arduino Sketch.
  - Auto save and auto load.
  - You can save your project in a file.
+ - Watch a preview of your animation without the need of uploading the code to your device.
 
 ## NPM Commands
 
